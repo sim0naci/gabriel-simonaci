@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gabriel Volpini — Data Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c14;
+    --bg2: #0d1320;
+    --bg3: #111926;
+    --surface: #141e2e;
+    --surface2: #1a2640;
+    --accent: #00d4c8;
+    --accent2: #0091ff;
+    --accent3: #7c3aed;
+    --text: #e8eef8;
+    --text2: #8899b4;
+    --text3: #4a5f7a;
+    --border: #1e2d45;
+    --glow: rgba(0, 212, 200, 0.15);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ── CANVAS ── */
+  #canvas {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(8, 12, 20, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .nav-logo span { color: var(--text2); }
+  .nav-links {
+    display: flex; gap: 2rem; list-style: none;
+  }
+  .nav-links a {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text2);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── SECTIONS ── */
+  section { position: relative; z-index: 1; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 7rem 3rem 4rem;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    width: 100%;
+  }
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 32px; height: 1px;
+    background: var(--accent);
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+  .h1-accent { color: var(--accent); }
+  .hero-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--accent2);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+  }
+  .hero-desc {
+    color: var(--text2);
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
+    max-width: 480px;
+  }
+  .cta-group {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.8rem 1.8rem;
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s;
+    border: none;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #080c14;
+  }
+  .btn-primary:hover {
+    background: #00ffe8;
+    box-shadow: 0 0 24px rgba(0,212,200,0.4);
+    transform: translateY(-1px);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+  .social-links {
+    display: flex; gap: 1rem;
+  }
+  .social-link {
+    display: flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text2);
+    text-decoration: none;
+    transition: all 0.2s;
+    font-size: 1.1rem;
+  }
+  .social-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--glow);
+  }
+
+  /* Hero right: terminal */
+  .hero-terminal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 40px rgba(0,212,200,0.05);
+  }
+  .terminal-bar {
+    background: var(--bg2);
+    padding: 0.75rem 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+  .terminal-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text3);
+    margin-left: auto;
+  }
+  .terminal-body {
+    padding: 1.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.9;
+    color: var(--text2);
+  }
+  .t-prompt { color: var(--accent); }
+  .t-cmd { color: var(--text); }
+  .t-comment { color: var(--text3); }
+  .t-str { color: #f59e0b; }
+  .t-kw { color: var(--accent2); }
+  .t-fn { color: #a78bfa; }
+  .t-num { color: #34d399; }
+  .cursor {
+    display: inline-block;
+    width: 8px; height: 14px;
+    background: var(--accent);
+    animation: blink 1.1s step-end infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ── ABOUT ── */
+  .about {
+    padding: 6rem 3rem;
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+  .about-left p {
+    color: var(--text2);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    max-width: 280px;
+  }
+  .about-right p {
+    color: var(--text2);
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 1.2rem;
+    font-size: 1rem;
+  }
+  .about-right p strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .about-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .stat-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── SKILLS ── */
+  .skills-section {
+    padding: 6rem 3rem;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .skills-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .skills-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+    margin-bottom: 4rem;
+  }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  .skill-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.5rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .skill-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .skill-card:hover::before { transform: scaleX(1); }
+  .skill-cat {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .skill-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  .skill-tags {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+    margin-top: 1rem;
+  }
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.25rem 0.6rem;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--text2);
+  }
+
+  /* ── PROJECTS ── */
+  .projects-section {
+    padding: 6rem 3rem;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .projects-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+    margin-bottom: 3.5rem;
+    align-items: end;
+  }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: all 0.3s;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+  .project-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,212,200,0.04), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .project-card:hover { border-color: var(--accent2); transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+  .project-card:hover::after { opacity: 1; }
+  .project-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+  }
+  .project-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+  .project-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.25;
+  }
+  .project-desc {
+    color: var(--text2);
+    font-size: 0.875rem;
+    font-weight: 300;
+    line-height: 1.7;
+    flex: 1;
+  }
+  .project-stack {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+  }
+  .stack-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    padding: 0.2rem 0.5rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--accent);
+  }
+  .project-link {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--text3);
+    transition: color 0.2s;
+    margin-top: 0.5rem;
+  }
+  .project-card:hover .project-link { color: var(--accent); }
+
+  /* ── EDUCATION ── */
+  .edu-section {
+    padding: 6rem 3rem;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+  }
+  .edu-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+  }
+  .edu-items {
+    display: flex; flex-direction: column; gap: 1.5rem;
+  }
+  .edu-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.75rem;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+  .edu-card:hover { border-color: var(--accent); }
+  .edu-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    background: rgba(0,212,200,0.08);
+    border: 1px solid rgba(0,212,200,0.2);
+    border-radius: 2px;
+    padding: 0.2rem 0.6rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .edu-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .edu-inst {
+    color: var(--text2);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+  .edu-note {
+    color: var(--text3);
+    font-size: 0.8rem;
+    font-style: italic;
+  }
+
+  /* ── CONTACT ── */
+  .contact-section {
+    padding: 6rem 3rem;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .contact-info p {
+    color: var(--text2);
+    font-weight: 300;
+    line-height: 1.75;
+    margin-bottom: 2rem;
+  }
+  .contact-detail {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 1rem;
+    color: var(--text2);
+    font-size: 0.9rem;
+  }
+  .contact-detail svg { color: var(--accent); flex-shrink: 0; }
+  .contact-form {
+    display: flex; flex-direction: column; gap: 1.2rem;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  input, textarea {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.85rem 1rem;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    resize: vertical;
+  }
+  input:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,212,200,0.08);
+  }
+  input::placeholder, textarea::placeholder { color: var(--text3); }
+  textarea { min-height: 130px; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 2rem 3rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg2);
+  }
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text3);
+  }
+  .footer-social { display: flex; gap: 1rem; }
+
+  /* ── DIVIDER LINE ── */
+  .section-line {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 0 3rem;
+    width: calc(100% - 6rem);
+  }
+
+  /* ── ANIMATIONS ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 0.7s ease forwards;
+  }
+  .fade-in:nth-child(1) { animation-delay: 0.1s; }
+  .fade-in:nth-child(2) { animation-delay: 0.25s; }
+  .fade-in:nth-child(3) { animation-delay: 0.4s; }
+  .fade-in:nth-child(4) { animation-delay: 0.55s; }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: none; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero, .about, .projects-section, .contact-section { padding: 5rem 1.5rem 4rem; }
+    .hero-inner, .about, .skills-header, .projects-header, .contact-inner, .edu-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .skills-section, .edu-section { padding: 4rem 1.5rem; }
+    .skills-grid { grid-template-columns: repeat(2, 1fr); }
+    .projects-grid { grid-template-columns: 1fr; }
+    .about-stats { grid-template-columns: repeat(3, 1fr); }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">gv<span>://</span>portfolio</div>
+  <ul class="nav-links">
+    <li><a href="#about">Sobre</a></li>
+    <li><a href="#skills">Habilidades</a></li>
+    <li><a href="#projects">Projetos</a></li>
+    <li><a href="#education">Formação</a></li>
+    <li><a href="#contact">Contato</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-tag fade-in">Disponível para oportunidades</div>
+        <h1 class="fade-in">Gabriel <br><span class="h1-accent">Simonaci</span></h1>
+        <p class="hero-sub fade-in">Data Engineer | Eng. da Computação · CEFET/RJ</p>
+        <p class="hero-desc fade-in">
+          Construo pipelines de dados robustos e arquiteturas modernas.<br>
+          Focado em Lakehouses, Data Mesh e soluções backend de alta performance.
+        </p>
+        <div class="cta-group fade-in">
+          <a href="#projects" class="btn btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
+            Ver Projetos
+          </a>
+          <a href="#" class="btn btn-outline">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Baixar Currículo
+          </a>
+        </div>
+        <div class="social-links fade-in">
+          <a href="https://linkedin.com" target="_blank" class="social-link" title="LinkedIn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="https://github.com" target="_blank" class="social-link" title="GitHub">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Terminal -->
+      <div class="hero-terminal fade-in">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+          <span class="terminal-title">gabriel@data-eng ~ pipeline.py</span>
+        </div>
+        <div class="terminal-body">
+          <div><span class="t-comment"># Engenharia de Dados · Gabriel Volpini</span></div>
+          <br>
+          <div><span class="t-kw">import</span> <span class="t-cmd">pipeline</span> <span class="t-kw">as</span> <span class="t-cmd">gv</span></div>
+          <div><span class="t-kw">from</span> <span class="t-cmd">stack</span> <span class="t-kw">import</span> <span class="t-cmd">Python, SQL, Docker</span></div>
+          <br>
+          <div><span class="t-fn">engineer</span><span class="t-cmd"> = gv.</span><span class="t-fn">DataEngineer</span><span class="t-cmd">(</span></div>
+          <div>&nbsp;&nbsp;<span class="t-str">"name"</span><span class="t-cmd">: </span><span class="t-str">"Gabriel Volpini"</span><span class="t-cmd">,</span></div>
+          <div>&nbsp;&nbsp;<span class="t-str">"focus"</span><span class="t-cmd">: [</span></div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str">"Data Lakehouse"</span><span class="t-cmd">,</span></div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str">"Data Mesh"</span><span class="t-cmd">,</span></div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str">"ETL Pipelines"</span></div>
+          <div>&nbsp;&nbsp;<span class="t-cmd">],</span></div>
+          <div>&nbsp;&nbsp;<span class="t-str">"location"</span><span class="t-cmd">: </span><span class="t-str">"Petrópolis, RJ"</span><span class="t-cmd">,</span></div>
+          <div>&nbsp;&nbsp;<span class="t-str">"open_to_work"</span><span class="t-cmd">: </span><span class="t-num">True</span></div>
+          <div><span class="t-cmd">)</span></div>
+          <br>
+          <div><span class="t-fn">engineer</span><span class="t-cmd">.</span><span class="t-fn">build_pipeline</span><span class="t-cmd">()</span></div>
+          <br>
+          <div><span class="t-prompt">▶</span><span class="t-cmd"> Pipeline executado com sucesso!</span></div>
+          <div><span class="t-prompt">$</span> <span class="cursor"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about">
+    <div class="about-left">
+      <div class="section-label">01 — Sobre mim</div>
+      <h2>Teoria que <span style="color:var(--accent)">vira código</span></h2>
+      <p>Da sala de aula para a linha de produção — sem perder o rigor analítico no caminho.</p>
+    </div>
+    <div class="about-right">
+      <p>Sou estudante de <strong>Engenharia da Computação no CEFET/RJ</strong> (campus Petrópolis), com foco direcionado para a área de engenharia de dados. Acredito que a base acadêmica sólida — de cálculo avançado à teoria dos grafos — é o que diferencia um engenheiro que apenas implementa de um que projeta soluções escaláveis.</p>
+      <p>Meu interesse profissional está nas <strong>arquiteturas modernas de dados</strong>: construção de pipelines eficientes, Data Lakehouses, Data Mesh e a orquestração de sistemas que transformam dados brutos em ativos concretos de negócio.</p>
+      <p>Sou um <strong>solucionador de problemas</strong> — seja depurando um sistema criptografado com BitLocker em produção, modelando entidades complexas em um ORM ou analisando a topologia de uma rede de sensores via grafos. O problema define a ferramenta, não o contrário.</p>
+      <div class="about-stats">
+        <div>
+          <div class="stat-val">3+</div>
+          <div class="stat-label">Projetos técnicos</div>
+        </div>
+        <div>
+          <div class="stat-val">IBM</div>
+          <div class="stat-label">Certificação Python</div>
+        </div>
+        <div>
+          <div class="stat-val">RJ</div>
+          <div class="stat-label">Presencial ou remoto</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="skills-section">
+    <div class="skills-inner">
+      <div class="skills-header">
+        <div>
+          <div class="section-label">02 — Stack técnica</div>
+          <h2>Ferramentas &amp; <span style="color:var(--accent)">Conceitos</span></h2>
+        </div>
+        <p style="color:var(--text2);font-weight:300;line-height:1.75;align-self:end;">
+          Categorias pensadas para facilitar a leitura de recrutadores técnicos. Não é uma lista de buzzwords — são tecnologias que uso e conceitos que aplico em projetos reais.
+        </p>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <div class="skill-cat">Linguagens</div>
+          <div class="skill-name">Python · SQL · C</div>
+          <p style="color:var(--text3);font-size:0.8rem;line-height:1.6;">Python como linguagem principal para dados e automação. SQL para modelagem e consultas. C para soluções de baixo nível.</p>
+          <div class="skill-tags">
+            <span class="tag">Python</span><span class="tag">SQL</span><span class="tag">C</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-cat">Dados & DB</div>
+          <div class="skill-name">Modelagem & ORM</div>
+          <p style="color:var(--text3);font-size:0.8rem;line-height:1.6;">Modelagem relacional, design de esquemas e mapeamento objeto-relacional com SQLAlchemy e MySQL.</p>
+          <div class="skill-tags">
+            <span class="tag">SQLAlchemy</span><span class="tag">MySQL</span><span class="tag">Modelagem</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-cat">Infraestrutura</div>
+          <div class="skill-name">Docker · Linux · Git</div>
+          <p style="color:var(--text3);font-size:0.8rem;line-height:1.6;">Containers para ambientes isolados e reprodutíveis. Administração e troubleshooting avançado em Linux. Controle de versão com Git.</p>
+          <div class="skill-tags">
+            <span class="tag">Docker</span><span class="tag">Linux</span><span class="tag">Git</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-cat">Conceitos</div>
+          <div class="skill-name">Grafos & Algoritmos</div>
+          <p style="color:var(--text3);font-size:0.8rem;line-height:1.6;">Teoria dos Grafos aplicada à análise de redes e conectividade. Análise de complexidade e otimização de algoritmos.</p>
+          <div class="skill-tags">
+            <span class="tag">Teoria dos Grafos</span><span class="tag">Algoritmos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="projects-section">
+    <div class="projects-header">
+      <div>
+        <div class="section-label">03 — Portfólio</div>
+        <h2>Projetos <span style="color:var(--accent)">reais</span></h2>
+      </div>
+      <p style="color:var(--text2);font-weight:300;line-height:1.75;align-self:end;">
+        Cada projeto resolve um problema concreto. Aqui estão os três mais representativos do meu perfil técnico atual.
+      </p>
+    </div>
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div style="display:flex;justify-content:space-between;align-items:start;">
+          <div class="project-num">01</div>
+          <div class="project-icon">🏢</div>
+        </div>
+        <div class="project-title">Sistema de Gestão Imobiliária</div>
+        <p class="project-desc">Arquitetura de banco de dados para gestão imobiliária com mapeamento de entidades complexas (Corretores, Contratos, Imóveis) via ORM. Ambiente completo containerizado com Docker para portabilidade e isolamento.</p>
+        <div class="project-stack">
+          <span class="stack-tag">Python</span>
+          <span class="stack-tag">SQLAlchemy</span>
+          <span class="stack-tag">Docker</span>
+          <span class="stack-tag">MySQL</span>
+        </div>
+        <div class="project-link">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+          Ver no GitHub
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div style="display:flex;justify-content:space-between;align-items:start;">
+          <div class="project-num">02</div>
+          <div class="project-icon">🕸️</div>
+        </div>
+        <div class="project-title">Análise de Redes de Sensores</div>
+        <p class="project-desc">Ferramenta em C para análise de redes de sensores via Teoria dos Grafos. Calcula métricas de alcance e conectividade de vértices e arestas para identificar sensores críticos dentro da topologia da rede.</p>
+        <div class="project-stack">
+          <span class="stack-tag">C</span>
+          <span class="stack-tag">Teoria dos Grafos</span>
+          <span class="stack-tag">Algoritmos</span>
+        </div>
+        <div class="project-link">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+          Ver no GitHub
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div style="display:flex;justify-content:space-between;align-items:start;">
+          <div class="project-num">03</div>
+          <div class="project-icon">🔧</div>
+        </div>
+        <div class="project-title">Recuperação de Infraestrutura BitLocker</div>
+        <p class="project-desc">Recuperação bem-sucedida de sistema com partições criptografadas via BitLocker. Uso de Dislocker e GParted para diagnóstico, desbloqueio e remontagem de volumes em ambiente Linux. Problema crítico de produção resolvido sem perda de dados.</p>
+        <div class="project-stack">
+          <span class="stack-tag">Linux</span>
+          <span class="stack-tag">Dislocker</span>
+          <span class="stack-tag">GParted</span>
+          <span class="stack-tag">CLI</span>
+        </div>
+        <div class="project-link">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+          Ver documentação
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="edu-section">
+    <div class="edu-inner">
+      <div>
+        <div class="section-label">04 — Formação</div>
+        <h2>Base <span style="color:var(--accent)">acadêmica</span></h2>
+        <p style="color:var(--text2);font-weight:300;line-height:1.75;margin-top:1rem;">
+          Rigor analítico e fundamentos sólidos que sustentam cada decisão técnica.
+        </p>
+      </div>
+      <div class="edu-items">
+        <div class="edu-card">
+          <div class="edu-badge">🎓 Graduação</div>
+          <div class="edu-title">Engenharia da Computação</div>
+          <div class="edu-inst">CEFET/RJ — Campus Petrópolis</div>
+          <div class="edu-note">Em andamento · Candidato à monitoria de Cálculo 1 — evidência de domínio analítico avançado.</div>
+        </div>
+        <div class="edu-card">
+          <div class="edu-badge">🏅 Certificação</div>
+          <div class="edu-title">Certificado Profissional em Python</div>
+          <div class="edu-inst">IBM</div>
+          <div class="edu-note">Validação externa de proficiência em Python para aplicações profissionais.</div>
+        </div>
+        <div class="edu-card">
+          <div class="edu-badge">📚 Estudos contínuos</div>
+          <div class="edu-title">Arquiteturas Modernas de Dados</div>
+          <div class="edu-inst">Autodidata · Cursos e literatura especializada</div>
+          <div class="edu-note">Data Lakehouse, Data Mesh, design de pipelines ETL/ELT e ecossistema Apache.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-section">
+    <div class="contact-inner">
+      <div class="contact-info">
+        <div class="section-label">05 — Contato</div>
+        <h2>Vamos <span style="color:var(--accent)">conversar</span></h2>
+        <p>Estou disponível para oportunidades de estágio ou júnior em engenharia de dados — presencialmente no Rio de Janeiro ou em formato remoto.</p>
+        <div class="contact-detail">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          gabriel.volpini@email.com
+        </div>
+        <div class="contact-detail">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Petrópolis, RJ · Disponível para RJ ou remoto
+        </div>
+        <div style="margin-top:2rem;display:flex;gap:0.75rem;">
+          <a href="https://linkedin.com" target="_blank" class="social-link" title="LinkedIn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="https://github.com" target="_blank" class="social-link" title="GitHub">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="contact-form">
+        <div class="form-group">
+          <label>Nome</label>
+          <input type="text" placeholder="Seu nome">
+        </div>
+        <div class="form-group">
+          <label>E-mail</label>
+          <input type="email" placeholder="seu@email.com">
+        </div>
+        <div class="form-group">
+          <label>Mensagem</label>
+          <textarea placeholder="Olá Gabriel, estamos com uma oportunidade..."></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="alert('Mensagem enviada! Gabriel entrará em contato em breve.')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Enviar mensagem
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2025 Gabriel Volpini · Petrópolis, RJ</div>
+  <div class="footer-social">
+    <a href="https://linkedin.com" target="_blank" class="social-link" title="LinkedIn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+    </a>
+    <a href="https://github.com" target="_blank" class="social-link" title="GitHub">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+    </a>
+  </div>
+</footer>
+
+<script>
+// ── CANVAS PARTICLE NETWORK ──
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', () => { resize(); init(); });
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.r = Math.random() * 1.5 + 0.5;
+    this.alpha = Math.random() * 0.5 + 0.2;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    if (this.x < 0 || this.x > W) this.vx *= -1;
+    if (this.y < 0 || this.y > H) this.vy *= -1;
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(0, 212, 200, ${this.alpha})`;
+    ctx.fill();
+  }
+}
+
+function init() {
+  const n = Math.floor((W * H) / 18000);
+  particles = Array.from({ length: Math.min(n, 80) }, () => new Particle());
+}
+init();
+
+function loop() {
+  ctx.clearRect(0, 0, W, H);
+  for (let i = 0; i < particles.length; i++) {
+    particles[i].update();
+    particles[i].draw();
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 130) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(0, 145, 255, ${0.12 * (1 - dist/130)})`;
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(loop);
+}
+loop();
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'none';
+      e.target.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.skill-card, .project-card, .edu-card, .about-right, .stat-val').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
